@@ -578,6 +578,9 @@ rte_rib6_free(struct rte_rib6 *rib)
 	struct rte_tailq_entry *te;
 	struct rte_rib6_list *rib6_list;
 	struct rte_rib6_node *tmp = NULL;
+	uint8_t ip[RTE_RIB6_IPV6_ADDR_SIZE];
+
+	memset(ip, 0, sizeof(ip));
 
 	if (unlikely(rib == NULL)) {
 		rte_errno = EINVAL;
@@ -598,7 +601,7 @@ rte_rib6_free(struct rte_rib6 *rib)
 
 	rte_mcfg_tailq_write_unlock();
 
-	while ((tmp = rte_rib6_get_nxt(rib, 0, 0, tmp,
+	while ((tmp = rte_rib6_get_nxt(rib, ip, 0, tmp,
 			RTE_RIB6_GET_NXT_ALL)) != NULL)
 		rte_rib6_remove(rib, tmp->ip, tmp->depth);
 
